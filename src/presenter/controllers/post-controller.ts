@@ -12,7 +12,7 @@ export class PostController {
 
   async getPosts(req, res: Response) {
     const page = Number(req.query.page) || 1;
-    const pageSize = Number(req.query.pageSize) || 10;
+    const pageSize = Number(req.query.size) || 10;
     const userId = req.userId;
     const posts = await this.postUseCaseApplication.getPosts(page, pageSize,userId);
     console.log(posts[0]);

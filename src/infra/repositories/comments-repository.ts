@@ -7,6 +7,9 @@ export class CommitRepositoryImp implements CommitRepository {
     constructor(commitDatasource: CommentsDataSource) {
         this.commitDatasource = commitDatasource;
     }
+    getCommitsCount(postId: String): Promise<number> {
+        return this.commitDatasource.getCommitsCount(postId);
+    }
     getCommits(page: number, pageSize: number, postId: String): Promise<CommentEntity[]> {
         return this.commitDatasource.getComments(page, pageSize, postId);
     }

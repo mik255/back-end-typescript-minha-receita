@@ -33,7 +33,7 @@ class LikeController {
       res.status(200).json(like);
     } catch (error) {
       console.error('Error fetching posts:', error);
-      res.status(500).send('Internal Server Error');
+      res.status(500).send(error.message);
     }
   }
 }

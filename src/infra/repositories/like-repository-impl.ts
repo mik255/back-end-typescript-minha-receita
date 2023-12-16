@@ -11,6 +11,12 @@ export class LikeRepositoryImpl implements LikeRepository{
     constructor(likeDataSource: LikeDataSource) {
         this.likeDataSource = likeDataSource;
     }
+    getCount(postId: String): Promise<number> {
+        return this.likeDataSource.getCount(postId);
+    }
+    userLiked(postId: String, userId: String): Promise<boolean> {
+        return this.likeDataSource.userLiked(postId, userId);
+    }
     getLikes(page: number, pageSize: number, postId: String): Promise<LikeEntity[]> {
         return this.likeDataSource.getLikes(page, pageSize, postId);
     }

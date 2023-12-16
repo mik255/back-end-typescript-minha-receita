@@ -1,4 +1,5 @@
 import { AccountUseCaseApplication } from "../../application/use-cases/account-usecases";
+import { Account } from "../../domain/entities/account";
 import { UserNotFoundError } from "../../infra/exeptions/account-exeptions";
 import { generateJWTToken } from "../middlewares/jwt";
 import express, { Request, Response } from 'express';
@@ -12,9 +13,11 @@ export class AccountController {
     try {
       var email = req.body.email;
       var password = req.body.password;
-      var user = await this.accountUseCaseApplication.login(email, password);
-      var token = generateJWTToken(user.id);
-      res.status(200).json(token);
+      var account = await this.accountUseCaseApplication.login(email, password);
+      var token = generateJWTToken(account.user.id);
+      account.token = token;
+      account.user.password = undefined;
+      res.status(200).json(account);
     } catch (error) {
       if (error instanceof UserNotFoundError) {
         console.error('Error:', error.message);

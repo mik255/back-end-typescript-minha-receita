@@ -1,9 +1,10 @@
+import { Account } from "../../entities/account";
 import { UserEntity } from "../../entities/user"
 import { AccountRepository } from "../../repositories/account-repository";
 
 export interface AccountUseCase {
     createUser(user: UserEntity): Promise<UserEntity>
-    login(email: string, password: string): Promise<UserEntity>
+    login(email: string, password: string): Promise<Account>
     getUserById(id: string): Promise<UserEntity>
 }
 
@@ -21,7 +22,7 @@ export class AccountUseCaseImpl implements AccountUseCase {
         var user = await this.accountRepository.createUser(user);
         return user;
     }
-    async login(email: string, password: string): Promise<UserEntity> {
+    async login(email: string, password: string): Promise<Account> {
         return this.accountRepository.login(email, password);
     }
 }

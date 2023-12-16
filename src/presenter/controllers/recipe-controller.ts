@@ -16,7 +16,7 @@ class RecipeController {
       const size = Number(req.query.size) || 10;
       const userId = req.userId;
 
-      const posts: RecipeEntity[] = await this.recipeUsecaseApplication.getPosts(page, size, userId);
+      const posts: RecipeEntity[] = await this.recipeUsecaseApplication.getRecipes(page, size, userId);
 
       res.status(200).json(posts);
     } catch (error) {

@@ -9,12 +9,16 @@ export interface CommitUseCase {
     createCommit(commit: CommentEntity): Promise<CommentEntity>;
     updateCommit(commit: CommentEntity): Promise<CommentEntity>;
     deleteCommit(id: number): Promise<void>;
+    getCommitsCount(postId:String):Promise<Number>;
 }
 
 export class CommitUseCaseImpl implements CommitUseCase {
     commitRepository: CommitRepository;
     constructor(commitRepository: CommitRepository) {
         this.commitRepository = commitRepository;
+    }
+    getCommitsCount(postId: String): Promise<Number> {
+        return this.commitRepository.getCommitsCount(postId);
     }
     getCommits(page: number, pageSize: number, postId: String): Promise<CommentEntity[]> {
         return this.commitRepository.getCommits(page, pageSize, postId);

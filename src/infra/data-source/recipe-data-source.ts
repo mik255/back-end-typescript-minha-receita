@@ -5,7 +5,7 @@ import { RecipeStepSchema } from "../orm/recipe-step";
 
 export interface RecipeDatasource {
     getRecipes(page: number, pageSize: number,userId:string): Promise<RecipeEntity[]>;
-    getRecipe(id: number): Promise<RecipeEntity>;
+    getRecipeById(id: string): Promise<RecipeEntity>;
     createRecipe(recipe: RecipeEntity): Promise<RecipeEntity>;
     updateRecipe(recipe: RecipeEntity): Promise<RecipeEntity>;
     deleteRecipe(id: number): Promise<void>;
@@ -21,8 +21,9 @@ export class RecipeDatasourceImpl implements RecipeDatasource {
         return recipeObjects;
 
     }
-    getRecipe(id: number): Promise<RecipeEntity> {
-        throw new Error("Method not implemented.");
+    async getRecipeById(id: string): Promise<RecipeEntity> {
+        var recipe = await  RecipeSchema.findById(id);
+        return recipe.toObject();
     }
     async createRecipe(recipe: RecipeEntity): Promise<RecipeEntity> {
         const ingredients = await Promise.all(

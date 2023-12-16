@@ -1,3 +1,4 @@
+import { Account } from "../../domain/entities/account";
 import { UserEntity } from "../../domain/entities/user";
 import { AccountRepository } from "../../domain/repositories/account-repository";
 import { AccountDataSource } from "../data-source/account-data-source";
@@ -15,10 +16,10 @@ export class AccountRepositoryImpl implements AccountRepository {
     async createUser(user: UserEntity): Promise<UserEntity> {
         return this.accountDataSource.createUser(user);
     }
-    async login(email: string, password: string): Promise<UserEntity> {
+    async login(email: string, password: string): Promise<Account> {
         try {
-            var user = await this.accountDataSource.login(email, password);
-            return user;
+            var account = await this.accountDataSource.login(email, password);
+            return account;
         } catch (err) {
             if (err.message == "User not found") {
                 throw new UserNotFoundError();

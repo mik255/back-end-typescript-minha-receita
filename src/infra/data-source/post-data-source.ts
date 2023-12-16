@@ -29,7 +29,7 @@ export class PostsDataSourceImpl implements IPostsDataSource {
     }
     async createPost(post: PostEntity, userId: String): Promise<PostEntity> {
         post.userId = userId;
-
+        
         const newPost = await PostSchema.create(post);
         return newPost.toObject();
     }

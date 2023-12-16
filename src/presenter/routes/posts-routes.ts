@@ -12,12 +12,32 @@ import { PostController } from '../controllers/post-controller';
 import { LikeUseCaseImpl } from '../../domain/use-cases/like/like-usecase';
 import { LikeRepositoryImpl } from '../../infra/repositories/like-repository-impl';
 import { LikeDataSourceImpl } from '../../infra/data-source/like-data-source';
+import { CommitUseCaseImpl } from '../../domain/use-cases/commit/commit-usecase';
+import { CommitRepositoryImp } from '../../infra/repositories/comments-repository';
+import { CommentsDataSourceImpl } from '../../infra/data-source/comments-data-source';
+import { LikesUseCaseApplicationImpl } from '../../application/use-cases/likes-usecases';
+import { AccountUseCaseImpl } from '../../domain/use-cases/account/account-usecase';
+import { AccountRepositoryImpl } from '../../infra/repositories/account-repository';
+import { AccountDataSourceImpl } from '../../infra/data-source/account-data-source';
 
 
 const postRouter = express.Router();
+//domain services
+const postUseCase = new PostUseCaseImpl(new PostsRepositoryImpl(new PostsDataSourceImpl()));
+const accountUseCase = new AccountUseCaseImpl(new AccountRepositoryImpl(new AccountDataSourceImpl()));
+const likeUseCase = new LikeUseCaseImpl(new LikeRepositoryImpl(new LikeDataSourceImpl()));
+const commitUseCase = new CommitUseCaseImpl(new CommitRepositoryImp(new CommentsDataSourceImpl()));
+const recipeUseCaseApplication = new RecipeUseCaseApplication(new RecipeUseCase(new RecipeRepositoryImpl(new RecipeDatasourceImpl())));
+//application services
+const likeAppUseCase = new LikesUseCaseApplicationImpl(likeUseCase, accountUseCase);
+const accountAppUsecases = new AccountUseCaseImpl(new AccountRepositoryImpl(new AccountDataSourceImpl()));
+
 const postsUseCaseApplicationImpl = new PostsUseCaseApplicationImpl(
-    new PostUseCaseImpl(new PostsRepositoryImpl(new PostsDataSourceImpl())),
-    new LikeUseCaseImpl(new LikeRepositoryImpl(new LikeDataSourceImpl()))
+  postUseCase,
+  likeAppUseCase,
+  commitUseCase,
+  accountAppUsecases,
+  recipeUseCaseApplication
   );
 const postsController = new PostController(postsUseCaseApplicationImpl);
 

@@ -12,8 +12,8 @@ export class RecipeRepositoryImpl implements RecipeRepository {
         return await this.recipeDatasource.getRecipes(page, pageSize,userId);
 
     }
-    getRecipe(id: number): Promise<RecipeEntity> {
-        throw new Error("Method not implemented.");
+    getRecipeById(id: string): Promise<RecipeEntity> {
+        return this.recipeDatasource.getRecipeById(id);
     }
     async createRecipe(recipe: RecipeEntity): Promise<RecipeEntity> {
         return await this.recipeDatasource.createRecipe(recipe);

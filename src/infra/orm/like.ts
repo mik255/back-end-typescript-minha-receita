@@ -16,6 +16,14 @@ const likeSchema = new Schema<LikeEntity>(
             type: String,
             required: true,
         },
+        userName: {
+            type: String,
+            required: false,
+        },
+        userImgUrl: {
+            type: String,
+            required: false,
+        },
         isUserFollowing: {
             type: Boolean,
             required: true,
