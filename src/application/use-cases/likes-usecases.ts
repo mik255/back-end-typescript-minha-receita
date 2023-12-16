@@ -2,6 +2,7 @@ import { LikeEntity } from "../../domain/entities/like";
 import { LikeRepository } from "../../domain/repositories/likes-repository";
 import { AccountUseCase } from "../../domain/use-cases/account/account-usecase";
 import { LikeUseCase } from "../../domain/use-cases/like/like-usecase";
+import { AccountUseCaseApplicationImpl } from "./account-usecases";
 
 export interface LikesUseCaseApplication {
     getLikes(page: number, pageSize: number, postId: String): Promise<LikeEntity[]>;
@@ -13,9 +14,9 @@ export interface LikesUseCaseApplication {
 
 export class LikesUseCaseApplicationImpl implements LikesUseCaseApplication {
     likeUseCase: LikeUseCase;
-    accountUseCase: AccountUseCase;
+    accountUseCase: AccountUseCaseApplicationImpl;
 
-    constructor(likeUseCase: LikeUseCase, accountUseCase: AccountUseCase) {
+    constructor(likeUseCase: LikeUseCase, accountUseCase: AccountUseCaseApplicationImpl) {
         this.likeUseCase = likeUseCase;
         this.accountUseCase = accountUseCase;
     }

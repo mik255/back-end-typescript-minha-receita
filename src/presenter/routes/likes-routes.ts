@@ -17,11 +17,12 @@ import LikeController from '../controllers/likes-controller';
 import { AccountUseCaseImpl } from '../../domain/use-cases/account/account-usecase';
 import { AccountRepositoryImpl } from '../../infra/repositories/account-repository';
 import { AccountDataSourceImpl } from '../../infra/data-source/account-data-source';
+import { AccountUseCaseApplicationImpl } from '../../application/use-cases/account-usecases';
 
 
 const likesRouter = express.Router();
 const likeUseCase = new LikeUseCaseImpl(new LikeRepositoryImpl(new LikeDataSourceImpl()));
-const accountUseCase = new AccountUseCaseImpl(new AccountRepositoryImpl(new AccountDataSourceImpl()));
+const accountUseCase = new AccountUseCaseApplicationImpl(new AccountUseCaseImpl(new AccountRepositoryImpl(new AccountDataSourceImpl())));
 const likesUseCaseApplicationImpl = new LikesUseCaseApplicationImpl(
   likeUseCase,
   accountUseCase
