@@ -16,12 +16,13 @@ export class CommentsDataSourceImpl implements CommentsDataSource{
        return await CommentSchema.countDocuments({postId:postId});
     }
 
-    async getComments(page: number, pageSize: number,postId:String): Promise<CommentEntity[]> {
-        const skip = (page - 1) * pageSize; // Calcula o número de documentos a serem pulados
-        const list = await CommentSchema.find().skip(skip).limit(pageSize).where('postId').equals(postId);
-        const commentsObjects = list.map((element) => element.toObject());
-        return commentsObjects??[];
+    async getComments(page: number, pageSize: number, postId: string): Promise<CommentEntity[]> {
+        const skip = (page - 1) * pageSize;
+        const list = await CommentSchema.find({ postId }).skip(skip).limit(pageSize);
+    
+        return list;
     }
+    
     getComment(id: number): Promise<CommentEntity> {
         throw new Error("Method not implemented.");
     }

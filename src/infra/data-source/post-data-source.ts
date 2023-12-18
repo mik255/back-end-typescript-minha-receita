@@ -4,7 +4,7 @@ import { PostSchema } from "../orm/post";
 
 
 export interface IPostsDataSource {
-    getPosts(page: number, pageSize: number, userId: String): Promise<PostEntity[]>;
+    getPosts(page: number, pageSize: number): Promise<PostEntity[]>;
     getPost(id: number): Promise<PostEntity>;
     createPost(post: PostEntity, userId: String): Promise<PostEntity>;
     updatePost(post: PostEntity): Promise<PostEntity>;
@@ -12,24 +12,23 @@ export interface IPostsDataSource {
 }
 
 export class PostsDataSourceImpl implements IPostsDataSource {
-    async getPosts(page: number, pageSize: number, userId: String): Promise<PostEntity[]> {
+    async getPosts(page: number, pageSize: number): Promise<PostEntity[]> {
         const skip = (page - 1) * pageSize; // Calcula o número de documentos a serem pulados
-
-        const posts = await PostSchema.find().skip(skip).limit(pageSize).where('userId').equals(userId);
+        const posts = await PostSchema.find().skip(skip).limit(pageSize);
         const postsObjects = posts.map((postsElement) => {
-            var index = posts.indexOf(postsElement);
-            posts[index].id = postsElement._id;
-            return posts[index];
-
+            var post = postsElement.toObject();
+            post.id = postsElement._id.toString();
+            return post;
         });
         return postsObjects;
     }
     getPost(id: number): Promise<PostEntity> {
         throw new Error("Method not implemented.");
     }
-    async createPost(post: PostEntity, userId: String): Promise<PostEntity> {
-        post.userId = userId;
+    async createPost(post: PostEntity, userId: string): Promise<PostEntity> {
         
+        post.userId = userId;
+      
         const newPost = await PostSchema.create(post);
         return newPost.toObject();
     }

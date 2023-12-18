@@ -13,14 +13,6 @@ const commentSchema = new Schema<CommentEntity>(
       type: String,
       required: true,
     },
-    userName: {
-      type: String,
-      required: true,
-    },
-    userImgUrl: {
-      type: String,
-      required: true,
-    },
     comment: {
       type: String,
       required: true,

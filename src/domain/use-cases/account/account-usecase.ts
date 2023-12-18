@@ -1,28 +1,78 @@
-import { Account } from "../../entities/account";
+import { AccountCreateInputDTO, AccountOutputDTO, AccountLoginInputDTO } from "../../dto/account-dto";
+import { FileInputDTO, FileOutputDTO } from "../../dto/file-dto";
+import { UserOutputDto } from "../../dto/user-dto";
+import { Credentials } from "../../entities/credentials";
 import { UserEntity } from "../../entities/user"
 import { AccountRepository } from "../../repositories/account-repository";
-
+import { IImageService } from "../../services/image-service";
+import { IJwtService } from "../../services/jwt-service";
+const { v4: uuidv4 } = require('uuid');
 export interface AccountUseCase {
-    createUser(user: UserEntity): Promise<UserEntity>
-    login(email: string, password: string): Promise<Account>
+    createUser(accountCreateInputDTO: AccountCreateInputDTO): Promise<AccountOutputDTO>
+    login(accountLoginInputDTO: AccountLoginInputDTO): Promise<AccountOutputDTO>
     getUserById(id: string): Promise<UserEntity>
 }
 
 export class AccountUseCaseImpl implements AccountUseCase {
     private accountRepository: AccountRepository;
-    constructor(accountRepository: AccountRepository) {
+    private iImageService: IImageService;
+    private jwtService: IJwtService;
+    constructor(accountRepository: AccountRepository, iImageService: IImageService, jwtService: IJwtService) {
         this.accountRepository = accountRepository;
+        this.iImageService = iImageService;
+        this.jwtService = jwtService;
     }
     getUserById(id: string): Promise<UserEntity> {
         return this.accountRepository.getUserById(id);
     }
-    async createUser(user: UserEntity): Promise<UserEntity> {
-        // Validações regex
+    async createUser(accountCreateInputDTO: AccountCreateInputDTO): Promise<AccountOutputDTO> {
+        var fileOutputDTOAvatar:FileOutputDTO;
+        try {
+            var credentials = new Credentials(accountCreateInputDTO.email, accountCreateInputDTO.password);
+            credentials.validate();
+            var user = new UserEntity(
+                uuidv4(),
+                accountCreateInputDTO.nome,
+                null,
+                credentials
+            );
 
-        var user = await this.accountRepository.createUser(user);
-        return user;
+
+            var token = this.jwtService.generateToken(user.id);
+
+            var user = await this.accountRepository.createUser(user);
+            var userDto = new UserOutputDto(
+                user.id,
+                user.nome,
+                user.avatarUrl,
+                user.credentials.email
+            );
+            return new AccountOutputDTO(
+                token,
+                userDto
+
+            );
+        } catch (e) {
+            await this.iImageService.deleteImage(fileOutputDTOAvatar);
+            throw new Error(e.message);
+        }
+
     }
-    async login(email: string, password: string): Promise<Account> {
-        return this.accountRepository.login(email, password);
+    async login(accountLoginInputDTO: AccountLoginInputDTO): Promise<AccountOutputDTO> {
+        var credentials = new Credentials(accountLoginInputDTO.email, accountLoginInputDTO.password);
+        credentials.validate();
+        var account = await this.accountRepository.login(credentials);
+        var user = account.user;
+        var token = this.jwtService.generateToken(user.id);
+        var userDto = new UserOutputDto(
+            user.id,
+            user.nome,
+            user.avatarUrl,
+            user.credentials.email
+        );
+        return new AccountOutputDTO(
+            token,
+            userDto
+        );
     }
 }

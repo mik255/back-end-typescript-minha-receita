@@ -1,26 +1,26 @@
-import RecipeStep from "../../domain/entities/recipe_step";
+import RecipeStepEntity from "../../domain/entities/recipe_step";
 import { RecipeStepSchema } from "../orm/recipe-step";
 
 export interface stepDataSource {
-    getSteps(page: number, pageSize: number): Promise<RecipeStep[]>;
-    getStep(id: number): Promise<RecipeStep>;
-    createStep(step: RecipeStep): Promise<RecipeStep>;
-    updateStep(step: RecipeStep): Promise<RecipeStep>;
+    getSteps(page: number, pageSize: number): Promise<RecipeStepEntity[]>;
+    getStep(id: number): Promise<RecipeStepEntity>;
+    createStep(step: RecipeStepEntity): Promise<RecipeStepEntity>;
+    updateStep(step: RecipeStepEntity): Promise<RecipeStepEntity>;
     deleteStep(id: number): Promise<void>;
 
 }
 
 export class StepDataSourceImpl implements stepDataSource{
-    getSteps(page: number, pageSize: number): Promise<RecipeStep[]> {
+    getSteps(page: number, pageSize: number): Promise<RecipeStepEntity[]> {
         throw new Error("Method not implemented.");
     }
-    getStep(id: number): Promise<RecipeStep> {
+    getStep(id: number): Promise<RecipeStepEntity> {
         throw new Error("Method not implemented.");
     }
-    createStep(step: RecipeStep): Promise<RecipeStep> {
+    createStep(step: RecipeStepEntity): Promise<RecipeStepEntity> {
         return RecipeStepSchema.create(step);
     }
-    updateStep(step: RecipeStep): Promise<RecipeStep> {
+    updateStep(step: RecipeStepEntity): Promise<RecipeStepEntity> {
         throw new Error("Method not implemented.");
     }
     deleteStep(id: number): Promise<void> {

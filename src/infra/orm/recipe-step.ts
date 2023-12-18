@@ -1,9 +1,9 @@
 // recipe_step.ts
 import { Schema, model } from 'mongoose';
-import RecipeStep from '../../domain/entities/recipe_step';
+import RecipeStepEntity from '../../domain/entities/recipe_step';
 
 
-const recipeStepSchema = new Schema<RecipeStep>({
+const recipeStepSchema = new Schema<RecipeStepEntity>({
   step: {
     type: Number,
     required: true,
@@ -14,4 +14,4 @@ const recipeStepSchema = new Schema<RecipeStep>({
   },
 });
 
-export const RecipeStepSchema = model<RecipeStep>('RecipeStep', recipeStepSchema);
+export const RecipeStepSchema = model<RecipeStepEntity>('RecipeStep', recipeStepSchema);

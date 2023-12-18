@@ -1,11 +1,11 @@
-import RecipeStep from "../entities/recipe_step";
+import RecipeStepEntity from "../entities/recipe_step";
 
 
 export interface StepRepository {
-    getSteps(page: number, pageSize: number): Promise<RecipeStep[]>;
-    getStep(id: number): Promise<RecipeStep>;
-    createStep(step: RecipeStep): Promise<RecipeStep>;
-    updateStep(step: RecipeStep): Promise<RecipeStep>;
+    getSteps(page: number, pageSize: number): Promise<RecipeStepEntity[]>;
+    getStep(id: number): Promise<RecipeStepEntity>;
+    createStep(step: RecipeStepEntity): Promise<RecipeStepEntity>;
+    updateStep(step: RecipeStepEntity): Promise<RecipeStepEntity>;
     deleteStep(id: number): Promise<void>;
 
 }

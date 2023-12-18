@@ -1,5 +1,5 @@
-class IngredientValueObject {
+class IngredientEntity {
     constructor(public readonly description: string) {}
   }
 
-  export default IngredientValueObject;
+  export default IngredientEntity;
