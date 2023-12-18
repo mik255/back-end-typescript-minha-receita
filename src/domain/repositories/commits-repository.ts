@@ -6,5 +6,5 @@ export interface CommitRepository {
     createCommit(commit: CommentEntity): Promise<CommentEntity>;
     updateCommit(commit: CommentEntity): Promise<CommentEntity>;
     deleteCommit(id: number): Promise<void>;
-    getCommitsCount(postId:String):Promise<Number>;
+    getCommitsCount(postId:String):Promise<number>;
 }

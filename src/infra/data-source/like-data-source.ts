@@ -14,15 +14,16 @@ export class LikeDataSourceImpl implements LikeDataSource {
         return LikeSchema.countDocuments({ postId: postId });
     }
     async userLiked(postId: String, userId: String): Promise<boolean> {
-        return (await LikeSchema.exists({ postId: postId, userId: userId })) ? true : false;
+        return (await LikeSchema.exists({ postId: postId, autorUserId: userId })) ? true : false;
     }
 
-    async getLikes(page: number, pageSize: number, postId: String): Promise<LikeEntity[]> {
-        const skip = (page - 1) * pageSize; // Calcula o número de documentos a serem pulados
-        const list = await LikeSchema.find().skip(skip).limit(pageSize).where('postId').equals(postId);
-        const likeObjects = list.map((element) => element.toObject());
-        return likeObjects;
+    async getLikes(page: number, pageSize: number, postId: string): Promise<LikeEntity[]> {
+        const skip = (page - 1) * pageSize;
+        const list = await LikeSchema.find({ postId }).skip(skip).limit(pageSize);
+    
+        return list;
     }
+    
     async createLike(like: LikeEntity): Promise<LikeEntity> {
         var result = await LikeSchema.create(like);
         return result.toObject();

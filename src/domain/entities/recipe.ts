@@ -1,9 +1,10 @@
 import Ingredient from "./ingredient";
-import RecipeStep from "./recipe_step";
+import RecipeStepEntity from "./recipe_step";
+import { UserEntity } from "./user";
 
-class Recipe {
+class RecipeEntity {
     constructor(
-      public readonly id: string | null,
+      public  id: string,
       public readonly userId: string,
       public readonly title: string,
       public readonly description: string,
@@ -12,8 +13,8 @@ class Recipe {
       public readonly timeInMinutes: number,
       public readonly recipeImgUrlList: string[],
       public readonly ingredients: Ingredient[],
-      public readonly steps: RecipeStep[]
+      public readonly steps: RecipeStepEntity[]
     ) {}
   }
 
-  export default Recipe;
+  export default RecipeEntity;

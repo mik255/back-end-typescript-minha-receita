@@ -1,8 +1,7 @@
 import { UserEntity } from "./user";
 
-export class Account {
+export class AccountEntity {
     constructor(
-        public  token: string,
-        public readonly user: UserEntity,
+        public  user: UserEntity,
     ) { }
 }

@@ -3,6 +3,7 @@ import { Schema, Document, model, Types } from 'mongoose';
 import RecipeEntity from '../../domain/entities/recipe';
 import IngredientScheme from './ingredient';
 import { RecipeStepSchema } from './recipe-step';
+import { PostSchema } from './post';
 
 
 
@@ -35,20 +36,23 @@ const recipeSchema = new Schema<RecipeEntity>({
     type: [String],
     required: true,
   },
-  ingredients: [
+  ingredients: 
     {
       type: [
-         IngredientScheme.schema.obj,
+        IngredientScheme.schema.obj,
       ]
     },
-  ],
-  steps: [
+
+  steps: 
     {
-        type: [
-           RecipeStepSchema.schema.obj,
-        ]
-      },
-  ],
+      type: [
+        RecipeStepSchema.schema.obj,
+      ]
+    },
 });
 
+recipeSchema.pre('deleteOne', { document: true, query: false }, async function (this: Document, next) {
+  await PostSchema.deleteMany({ recipeId: this._id }).exec();
+  next();
+});
 export const RecipeSchema = model<RecipeEntity>('Recipe', recipeSchema);

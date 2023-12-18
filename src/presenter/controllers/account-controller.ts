@@ -1,22 +1,28 @@
-import { AccountUseCaseApplication } from "../../application/use-cases/account-usecases";
-import { Account } from "../../domain/entities/account";
-import { UserNotFoundError } from "../../infra/exeptions/account-exeptions";
-import { generateJWTToken } from "../middlewares/jwt";
-import express, { Request, Response } from 'express';
 
+import e from "express";
+import { AccountCreateInputDTO, AccountLoginInputDTO } from "../../domain/dto/account-dto";
+import { AccountUseCase } from "../../domain/use-cases/account/account-usecase";
+import { UserNotFoundError } from "../../infra/exeptions/account-exeptions";
+import express, { Request, Response } from 'express';
+import {FileInputDTO } from "../../domain/dto/file-dto";
+import multer from 'multer';
+const { v4: uuidv4 } = require('uuid');
+const storage = multer.memoryStorage();
+const upload = multer({ storage: storage });
 export class AccountController {
-  accountUseCaseApplication: AccountUseCaseApplication;
-  constructor(accountUseCaseApplication: AccountUseCaseApplication) {
-    this.accountUseCaseApplication = accountUseCaseApplication;
+  accountUsecase: AccountUseCase;
+  constructor(accountUsecase: AccountUseCase) {
+    this.accountUsecase = accountUsecase;
   }
   async login(req: Request, res: Response): Promise<void> {
     try {
       var email = req.body.email;
       var password = req.body.password;
-      var account = await this.accountUseCaseApplication.login(email, password);
-      var token = generateJWTToken(account.user.id);
-      account.token = token;
-      account.user.password = undefined;
+      var dto = new AccountLoginInputDTO(
+        email,
+        password
+      )
+      var account = await this.accountUsecase.login(dto);
       res.status(200).json(account);
     } catch (error) {
       if (error instanceof UserNotFoundError) {
@@ -28,10 +34,21 @@ export class AccountController {
 
   async createUser(req: Request, res: Response): Promise<void> {
     try {
-      var userRequest = req.body;
-      var user = await this.accountUseCaseApplication.createUser(userRequest);
-      res.status(200).json(user);
+      const avatarUrl = req.body.imgAvatar as string;
+
+      const body = req.body;
+
+      const dto = new AccountCreateInputDTO(
+        avatarUrl,
+        body.nome,
+        body.email,
+        body.password,
+      )
+      var outputDto = await this.accountUsecase.createUser(dto);
+      res.status(200).json(outputDto);
+
     } catch (error) {
+      console.error('Error fetching posts:', error);
       if (error.message == "Usuário já existe") {
         res.status(500).send(error.message);
         return;
@@ -42,7 +59,7 @@ export class AccountController {
   async getUserById(req, res: Response): Promise<void> {
     try {
       var id = req.userId;
-      var user = await this.accountUseCaseApplication.getUserById(id);
+      var user = await this.accountUsecase.getUserById(id);
       res.status(200).json(user);
     } catch (error) {
       if (error instanceof UserNotFoundError) {

@@ -1,24 +1,18 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
 import { Request, Response, NextFunction } from 'express';
+import { JwtService } from '../../infra/services/jwt-service-impl';
+import { IJwtService } from '../../domain/services/jwt-service';
 
-const secretKey = process.env.SECRET_KEY;
-const algorithm = 'HS256';
-
-export function generateJWTToken(userId: string) {
-    const payload = {
-        userId: userId,
-    };
-    const token = jwt.sign(payload, secretKey, { algorithm });
-    return token;
-}
 interface AuthenticatedRequest extends Request {
     userId?: string;
 }
 
+export const jwtMiddlewareService:IJwtService = new JwtService();
+
 export function authMiddleware(req: AuthenticatedRequest, res: Response, next: NextFunction): void {
     console.log(req.path);
-    if (req.path == '/account/login' || req.path == '/account/register') {
+    if (req.path == '/account/login' || req.path == '/account/register' || req.path.search('/uploads') != -1) {
         next();
         return;
     }
@@ -30,17 +24,17 @@ export function authMiddleware(req: AuthenticatedRequest, res: Response, next: N
     }
     token = token.split(' ')[1];
 
-    jwt.verify(token, secretKey, { algorithms: [algorithm] }, (err, decoded) => {
-        if (err) {
-            return res.status(401).json({ message: 'Falha na autenticação. Token inválido.' });
-        }
-        // Inicializa req.body como um objeto se for undefined
-        req.body = req.body || {};
+    const decoded = jwtMiddlewareService.verifyToken(token);
+    if (!decoded) {
+        res.status(401).json({ message: 'Token de autenticação inválido.' });
+        return
+    }
+    // Inicializa req.body como um objeto se for undefined
+    req.body = req.body || {};
 
-        // Adiciona propriedades ao req.body
-        req.userId = decoded.userId;
-        // Continue com a execução normal da rota
-        console.log(req.body);
-        next();
-    });
+    // Adiciona propriedades ao req.body
+    req.userId = decoded.userId;
+    // Continue com a execução normal da rota
+    console.log(req.body);
+    next();
 }

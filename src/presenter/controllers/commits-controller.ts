@@ -1,18 +1,14 @@
 
 import express, { Request, Response } from 'express';
-
-import RecipeEntity from '../../domain/entities/recipe';
-import { RecipeUseCaseApplication } from '../../application/use-cases/recipe-usecase';
-import { LikesUseCaseApplication } from '../../application/use-cases/likes-usecases';
-import { LikeEntity } from '../../domain/entities/like';
-import { CommitUseCasesApplicationImpl } from '../../application/use-cases/commits-usecases';
 import { CommentEntity } from '../../domain/entities/commit';
+import { CommitUseCase } from '../../domain/use-cases/commit/commit-usecase';
+import { GetCommentByPostInputDTO } from '../../domain/dto/comment';
 
 class CommitsController {
-  private commitsUsecaseApplication: CommitUseCasesApplicationImpl;
+  private commitsUsecase: CommitUseCase;
 
-  constructor(commitsUsecaseApplication: CommitUseCasesApplicationImpl) {
-    this.commitsUsecaseApplication = commitsUsecaseApplication;
+  constructor(commitsUsecase: CommitUseCase) {
+    this.commitsUsecase = commitsUsecase;
   }
 
   async getCommits(req: Request, res: Response): Promise<void> {
@@ -20,9 +16,15 @@ class CommitsController {
       const page = Number(req.query.page) || 1;
       const size = Number(req.query.size) || 10;
       const postId = String(req.query.postId);
-      const comments: CommentEntity[] = await this.commitsUsecaseApplication.getCommits(page, size, postId);
+      const imputDto = new GetCommentByPostInputDTO(
+        req.body.userId,
+        postId,
+        page,
+        size,
+      )
+      const outputDto = await this.commitsUsecase.getCommits(imputDto);
 
-      res.status(200).json(comments);
+      res.status(200).json(outputDto);
     } catch (error) {
       console.error('Error fetching comments:', error);
       res.status(500).send('Internal Server Error');
@@ -31,7 +33,7 @@ class CommitsController {
   async createComment(req: Request, res: Response): Promise<void> {
     try {
       const comment: CommentEntity = req.body;
-      const like: CommentEntity = await this.commitsUsecaseApplication.createCommit(comment);
+      const like: CommentEntity = await this.commitsUsecase.createCommit(comment);
 
       res.status(200).json(like);
     } catch (error) {

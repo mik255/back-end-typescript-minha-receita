@@ -8,8 +8,8 @@ export class PostsRepositoryImpl implements IPostsRepository{
     constructor(iPostsDataSource: IPostsDataSource) {
         this.iPostsDataSource = iPostsDataSource;
     }
-    getPosts(page: number, pageSize: number,userId:String): Promise<PostEntity[]> {
-        return this.iPostsDataSource.getPosts(page, pageSize,userId);
+    getPosts(page: number, pageSize: number): Promise<PostEntity[]> {
+        return this.iPostsDataSource.getPosts(page, pageSize);
     }
     getPost(id: number): Promise<PostEntity> {
         throw new Error("Method not implemented.");

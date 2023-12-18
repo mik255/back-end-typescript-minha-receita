@@ -1,15 +1,15 @@
 import {Schema, model } from 'mongoose';
-import IngredientValueObject from '../../domain/entities/ingredient';
+import IngredientEntity from '../../domain/entities/ingredient';
 
 
 
-const ingredientSchema = new Schema<IngredientValueObject>({
+const ingredientSchema = new Schema<IngredientEntity>({
     description: {
         type: String,
         required: true,
     },
 });
 
-const IngredientScheme = model<IngredientValueObject>('Ingredient', ingredientSchema);
+const IngredientScheme = model<IngredientEntity>('Ingredient', ingredientSchema);
 
 export default IngredientScheme;

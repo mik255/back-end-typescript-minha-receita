@@ -1,6 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { UserEntity } from '../../domain/entities/user';
 
+
 const userSchema = new Schema<UserEntity>({
   nome: {
     type: String,
@@ -10,15 +11,16 @@ const userSchema = new Schema<UserEntity>({
     type: String,
     default: null,
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
-});
+  credentials: {
+    type: {
+      email: { type: String, required: true, unique: false },
+      password: {
+        type: String,
+        required: true,
+      },
+    },
+  }
+},
+);
 
 export const UserSchema = model<UserEntity>('User', userSchema);
