@@ -17,7 +17,6 @@ export class AccountLoginOutputDTO {
 
 export class AccountCreateInputDTO {
     constructor(
-        public avatarFile:string,
         public nome: string,
         public email: string,
         public password: string,
