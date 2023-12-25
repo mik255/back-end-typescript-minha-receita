@@ -22,8 +22,10 @@ export class AccountUseCaseImpl implements AccountUseCase {
         this.iImageService = iImageService;
         this.jwtService = jwtService;
     }
-    getUserById(id: string): Promise<UserEntity> {
-        return this.accountRepository.getUserById(id);
+    async getUserById(id: string): Promise<UserEntity> {
+       var user = await this.accountRepository.getUserById(id);
+       user.credentials.password = undefined;
+       return user;
     }
     async createUser(accountCreateInputDTO: AccountCreateInputDTO): Promise<AccountOutputDTO> {
         var fileOutputDTOAvatar:FileOutputDTO;

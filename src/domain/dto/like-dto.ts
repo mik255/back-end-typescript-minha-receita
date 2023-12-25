@@ -17,6 +17,7 @@ export class GetLikesByPostIdInputDTO{
 export class LikeOutputDTO{
     constructor(
         public id: string,
+        public autorUserId: string,
         public userName: string,
         public avatarUrl: string,
         public userIsFollowing: boolean,

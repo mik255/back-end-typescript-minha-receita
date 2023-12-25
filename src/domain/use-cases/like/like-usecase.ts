@@ -7,7 +7,7 @@ import { AccountUseCase } from "../account/account-usecase";
 export interface LikeUseCase {
     getLikes(getLikesByPostIdInputDTO: GetLikesByPostIdInputDTO): Promise<LikeOutputDTO[]>;
     createLike(likeInputDTO: LikeInputDTO): Promise<LikeOutputDTO>;
-    deleteLike(id: number): Promise<void>;
+    deleteLike(id: string,postId:string): Promise<void>;
     userLiked(postId: String, userId: String): Promise<boolean>;
     getCount(postId: String): Promise<number>;
 }
@@ -36,6 +36,7 @@ export class LikeUseCaseImpl implements LikeUseCase {
             var user = await this.accountUsecase.getUserById(like.autorUserId);
             return new LikeOutputDTO(
                 like.id,
+                like.autorUserId,
                 user.nome,
                 user.avatarUrl,
                 like.autorUserId == getLikesByPostIdInputDTO.userId,
@@ -43,7 +44,14 @@ export class LikeUseCaseImpl implements LikeUseCase {
             );
         });
 
-        return await Promise.all(promises);
+        var list = await Promise.all(promises);
+        //not replicated 
+        var uniqueList = list.filter((thing, index, self) =>
+            index === self.findIndex((t) => (
+                t.autorUserId === thing.autorUserId
+            ))
+        )
+        return uniqueList;
     }
     async createLike(likeInputDTO: LikeInputDTO): Promise<LikeOutputDTO> {
         
@@ -56,14 +64,16 @@ export class LikeUseCaseImpl implements LikeUseCase {
         ));
             return new LikeOutputDTO(
                 like.id,
+                user.id,
                 user.nome,
                 user.avatarUrl,
                 like.autorUserId == user.id,
                 like.createdAt
             );
     }
-    deleteLike(id: number): Promise<void> {
-        return this.likeRepository.deleteLike(id);
+    deleteLike(id: string,postId:string): Promise<void> {
+        
+        return this.likeRepository.deleteLike(id,postId);
     }
 
 }

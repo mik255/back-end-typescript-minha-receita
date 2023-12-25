@@ -14,7 +14,7 @@ export interface IPostsDataSource {
 export class PostsDataSourceImpl implements IPostsDataSource {
     async getPosts(page: number, pageSize: number): Promise<PostEntity[]> {
         const skip = (page - 1) * pageSize; // Calcula o número de documentos a serem pulados
-        const posts = await PostSchema.find().skip(skip).limit(pageSize);
+        const posts = await PostSchema.find().sort({ createdAt: -1 }).skip(skip).limit(pageSize);
         const postsObjects = posts.map((postsElement) => {
             var post = postsElement.toObject();
             post.id = postsElement._id.toString();

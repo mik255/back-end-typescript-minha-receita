@@ -23,8 +23,8 @@ export class LikeRepositoryImpl implements LikeRepository{
     createLike(like: LikeEntity): Promise<LikeEntity> {
        return this.likeDataSource.createLike(like);
     }
-    deleteLike(id: number): Promise<void> {
-        throw new Error("Method not implemented.");
+    deleteLike(id: string,postId:string): Promise<void> {
+        return this.likeDataSource.deleteLike(id,postId);
     }
 
 }

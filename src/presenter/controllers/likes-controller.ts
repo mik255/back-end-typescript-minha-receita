@@ -46,7 +46,21 @@ class LikeController {
       res.status(500).send(error.message);
     }
   }
+  async delete(req: any, res: Response): Promise<void> {
+    try {
+      const id = req.query.likeId;
+      const postId = req.query.postId;
+      console.log('id-----',id);
+      console.log('postId-----',postId);
+      await this.likeUseCase.deleteLike(id,postId);
+      res.status(200).send();
+    } catch (error) {
+      console.error('Error fetching posts:', error);
+      res.status(500).send(error.message);
+    }
+  }
 }
+
 
 
 export default LikeController;

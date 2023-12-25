@@ -13,7 +13,7 @@ export class GetCommentByPostOutputDTO{
     constructor(
         public readonly value: {
              readonly comment: string,
-             readonly createdAt: string,
+              createdAt: string,
         },
         public readonly user: {
             id: string,
