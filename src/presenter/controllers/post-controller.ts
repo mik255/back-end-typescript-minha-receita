@@ -16,7 +16,10 @@ export class PostController {
     const pageSize = Number(req.query.size) || 10;
     const userId = req.userId;
     const inputDto = new GetPostsImputDTO(page, pageSize, userId);
-    const posts = await this.postUsecase.getPosts(inputDto);
+    var posts = await this.postUsecase.getPosts(inputDto);
+    posts = posts.sort((a, b) => {
+      return b.createdAt.getTime() - a.createdAt.getTime();
+    });
     res.status(200).json(posts);
   }
 

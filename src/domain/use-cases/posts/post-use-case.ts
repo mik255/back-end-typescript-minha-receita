@@ -50,6 +50,7 @@ export class PostUseCaseImpl implements PostUseCase {
             )
             );
             var likescount = (await this.likesUsecase.getCount(post.id));
+            var userHasLiked = await this.likesUsecase.userLiked(post.id, getPostsImputDTO.userId);
             var commentscount = await this.commentsUsecase.getCommitsCount(post.id);
             var recipeDto = await this.recipeUsecase.getRecipeById(post.recipeId);
             var user = await this.accountUsecase.getUserById(post.userId);
@@ -62,7 +63,7 @@ export class PostUseCaseImpl implements PostUseCase {
                 commentscount,
                 recipeDto.recipeImgUrlList.map(recipeImgUrl => new FileOutputDTO(recipeImgUrl)),
                 recipeDto.id,
-                user.id == getPostsImputDTO.userId,
+                userHasLiked,
                 {
                     id: user.id,
                     nome: user.nome,

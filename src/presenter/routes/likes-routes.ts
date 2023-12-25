@@ -27,4 +27,8 @@ likesRouter.get('/', async (req, res) => {
 likesRouter.post('/', async (req, res) => {
   await likeController.createLike(req, res);
 });
+
+likesRouter.delete('/', async (req, res) => {
+  await likeController.delete(req, res);
+});
 export default likesRouter;

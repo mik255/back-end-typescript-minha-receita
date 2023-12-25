@@ -2,6 +2,8 @@
 import { FileInputDTO, FileOutputDTO } from "../../domain/dto/file-dto";
 import { IImageService } from "../../domain/services/image-service";
 import * as fsPromisses from 'fs/promises';
+import { redimensionarVideo } from "./file-encoder";
+
 
 export class ImgBase64ServiceImpl implements IImageService {
     async uploadImages(fileInputs: FileInputDTO[]): Promise<FileOutputDTO[]> {
@@ -10,9 +12,9 @@ export class ImgBase64ServiceImpl implements IImageService {
             const filename = `${time}_${fileInput.nome}`;
             const path = `uploads/${filename}.png`;
 
-            // Salvar o arquivo no sistema de arquivos
-            await fsPromisses.writeFile(path, fileInput.dados, 'base64');
-
+            var buffer = await redimensionarVideo(fileInput.dados);
+            await fsPromisses.writeFile(path, buffer);
+       
             const fileOutput = new FileOutputDTO(path);
             return fileOutput;
         });

@@ -18,7 +18,7 @@ export class CommentsDataSourceImpl implements CommentsDataSource{
 
     async getComments(page: number, pageSize: number, postId: string): Promise<CommentEntity[]> {
         const skip = (page - 1) * pageSize;
-        const list = await CommentSchema.find({ postId }).skip(skip).limit(pageSize);
+        const list = await CommentSchema.find({ postId }).sort({ createdAt: -1 }).skip(skip).limit(pageSize);
     
         return list;
     }
