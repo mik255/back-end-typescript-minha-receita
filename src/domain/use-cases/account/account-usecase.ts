@@ -41,6 +41,7 @@ export class AccountUseCaseImpl implements AccountUseCase {
 
 
             var token = this.jwtService.generateToken(user.id);
+         
 
             var user = await this.accountRepository.createUser(user);
             var userDto = new UserOutputDto(
@@ -55,7 +56,7 @@ export class AccountUseCaseImpl implements AccountUseCase {
 
             );
         } catch (e) {
-            await this.iImageService.deleteImage(fileOutputDTOAvatar);
+           // await this.iImageService.deleteImage(fileOutputDTOAvatar);
             throw new Error(e.message);
         }
 

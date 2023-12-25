@@ -37,9 +37,8 @@ export class AccountController {
       const avatarUrl = req.body.imgAvatar as string;
 
       const body = req.body;
-
+    
       const dto = new AccountCreateInputDTO(
-        avatarUrl,
         body.nome,
         body.email,
         body.password,
